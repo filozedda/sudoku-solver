@@ -106,6 +106,78 @@ int valid_boxes(const int grid[9][9]) {
     return 1;
 }
 
+int can_place(const int grid[9][9], int row, int col, int value) {
+	if (value < 1 || value > 9) {   // checking if value is ammissible
+		return 0;
+	}
+	if (grid[row][col] != 0) {   //checking if the square has not been taken yet
+		return 0;
+	}
+	
+	for (int j = 0; j < 9; j++) {
+		if (value == grid[row][j]) {  //checking row
+			return 0;
+		}
+	}
+		
+	for (int i = 0; i < 9; i++) {
+		if (value == grid[i][col]) {  //checking column
+			return 0;
+		}
+	}
+	
+	int b_row = row - (row % 3);
+	int b_col = col - (col % 3);
+	
+	for (int k = 0; k < 9; k++) {   // checking box
+		if (value == grid[b_row + k / 3][b_col + k % 3]) {
+			return 0;
+		}
+	}
+	
+	return 1;
+}
+
+int solve_sudoku(int grid[9][9]) {
+	
+    int row = -1;
+    int col = -1;
+    
+    for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
+			if (grid[i][j] == 0) {
+				row = i;
+				col = j;
+				break;
+			}
+		}
+		if (row != -1) {
+			break;
+		}
+		
+	}
+	if (row == -1) {
+		return 1;
+	}
+
+    for (int value = 1; value <= 9; value++) {
+        if (can_place(grid, row, col, value)) {
+
+            grid[row][col] = value;
+
+            if (solve_sudoku(grid)) {
+                return 1;
+            }
+
+            grid[row][col] = 0;   // backtrack
+        }
+    }
+
+    return 0;
+}
+		
+	
+
 int main(void) {
     int grid[9][9];
     
@@ -118,8 +190,13 @@ int main(void) {
 		printf("This Sudoku is NOT valid\n");
 		return 1;
 	}
-    
-    print_sudoku(grid);
+
+    if (solve_sudoku(grid)) {
+       printf("Solved Sudoku:\n");
+       print_sudoku(grid);
+    } else {
+    printf("This Sudoku has no solution.\n");
+}
 
     return 0;
 }
