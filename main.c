@@ -54,28 +54,30 @@ int valid_values(const int grid[9][9]) {
 }
 
 int valid_columns(const int grid[9][9]) {
-	for (int j = 0; j < 9; j++) {
-		for (int i = 1; i < 9; i++) {
-			for (int check = 0; check < i; check++) {
-				if (grid[check][j] == grid[i][j] && grid[i][j] != 0) {
-				return 0;
-			}
-		}
-	}
-}
+    for (int j = 0; j < 9; j++) {
+        for (int i = 1; i < 9; i++) {
+            for (int check = 0; check < i; check++) {
+                if (grid[check][j] == grid[i][j] && grid[i][j] != 0) {
+                    return 0;
+                }
+            }
+        }
+    }
+
     return 1;
 }
 
 int valid_rows(const int grid[9][9]) {
-	for (int i = 0; i < 9; i++) {
-		for (int j = 1; j < 9; j++) {
-			for (int check = 0; check < j; check++) {
-				if (grid[i][check] == grid[i][j] && grid[i][j] != 0) {
-				return 0;
-			}
-		}
-	}
-}
+    for (int i = 0; i < 9; i++) {
+        for (int j = 1; j < 9; j++) {
+            for (int check = 0; check < j; check++) {
+                if (grid[i][check] == grid[i][j] && grid[i][j] != 0) {
+                    return 0;
+                }
+            }
+        }
+    }
+
     return 1;
 }
 
