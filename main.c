@@ -188,10 +188,15 @@ int solve_sudoku(int grid[9][9], SolverStats *stats) {
 		
 	
 
-int main(void) {
+int main(int argc, char *argv[]) {
     int grid[9][9];
     
-    if (read_sudoku("puzzle.txt", grid) == 0) {
+    if (argc != 2) {
+    printf("Usage: %s <puzzle-file>\n", argv[0]);
+    return 1;
+}
+    
+    if (read_sudoku(argv[1], grid) == 0) {
         printf("Error reading puzzle\n");
         return 1;
     }
