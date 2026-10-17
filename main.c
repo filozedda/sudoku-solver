@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 
 void print_sudoku(const int grid[9][9]) { //to specify the function doesn't modify the sudoku
   for (int i = 0; i < 9; i++) {
@@ -140,7 +141,13 @@ int can_place(const int grid[9][9], int row, int col, int value) {
 	return 1;
 }
 
-int solve_sudoku(int grid[9][9]) {
+typedef struct {
+    long recursive_calls;
+    long backtracks;
+} SolverStats;
+
+int solve_sudoku(int grid[9][9], SolverStats *stats) {
+	stats->recursive_calls++;
 	
     int row = -1;
     int col = -1;
@@ -167,11 +174,12 @@ int solve_sudoku(int grid[9][9]) {
 
             grid[row][col] = value;
 
-            if (solve_sudoku(grid)) {
+            if (solve_sudoku(grid, stats)) {
                 return 1;
             }
 
             grid[row][col] = 0;   // backtrack
+            stats->backtracks++;
         }
     }
 
@@ -192,13 +200,26 @@ int main(void) {
 		printf("This Sudoku is NOT valid\n");
 		return 1;
 	}
+	
+    SolverStats stats = {0, 0};
+    
+    clock_t start = clock();
+    
+    int solved = solve_sudoku(grid, &stats);
+    
+    clock_t end = clock();
+    
+    double elapsed = (double)(end - start) / CLOCKS_PER_SEC;
 
-    if (solve_sudoku(grid)) {
+    if (solved) {
        printf("Solved Sudoku:\n");
        print_sudoku(grid);
     } else {
     printf("This Sudoku has no solution.\n");
 }
 
+    printf("\nRecursive calls: %ld\n", stats.recursive_calls);
+    printf("Backtracks: %ld\n", stats.backtracks);
+    printf("Execution time: %.6f seconds\n", elapsed);
     return 0;
 }
